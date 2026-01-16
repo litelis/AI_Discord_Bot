@@ -20,9 +20,24 @@ Bot de Discord inteligente que utiliza Ollama (modelo gemini-3-flash-preview) pa
 
 ## 🚀 Instalación Rápida
 
-### Método 1: Inicio Automático (Recomendado)
+### Método 1: Instalación Guiada (Recomendado para Primera Vez)
 
-Simplemente ejecuta:
+Para configurar todo desde cero, ejecuta:
+
+```bash
+python install.py
+```
+
+Este script ejecuta en orden:
+1. ✅ **Setup** - Configura entorno y descarga modelos
+2. ✅ **Config** - Configura TOKEN y usuarios autorizados
+3. ✅ **Update** - Verifica actualizaciones del repositorio
+
+Después de cada paso te pregunta si quieres continuar con el siguiente (s/n).
+
+### Método 2: Inicio Rápido (Si Ya Está Configurado)
+
+Una vez configurado, usa:
 
 ```bash
 python main.py
@@ -35,7 +50,7 @@ Este script automáticamente:
 - ✅ Instala dependencias si hace falta
 - ✅ Inicia el bot de Discord
 
-### Método 2: Configuración Manual
+### Método 3: Configuración Manual
 
 Si prefieres configurar paso a paso:
 
@@ -98,7 +113,8 @@ Limpia el historial de conversación para empezar de cero:
 
 ```
 bot/
-├── main.py             # 🚀 Script principal (inicio automático)
+├── install.py          # 🔧 Instalador completo (setup + config + update)
+├── main.py             # 🚀 Lanzador principal (inicio automático)
 ├── src/                # 📁 Código fuente
 │   ├── bot.py          # Código principal del bot
 │   ├── config.py       # Configurador interactivo (.env)
@@ -160,3 +176,5 @@ Este proyecto es de código abierto y está disponible bajo la licencia MIT.
 ---
 
 Desarrollado con ❤️ usando Python, Discord.py y Ollama
+
+
