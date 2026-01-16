@@ -60,13 +60,23 @@ def check_ollama():
 
 def pull_model():
     """Descarga el modelo de Ollama."""
-    print("📥 Descargando modelo llama3...")
+    print("📥 Descargando modelo gemini-3-flash-preview...")
     print("Esto puede tomar varios minutos dependiendo de tu conexión...")
-    success, output = run_command("ollama pull llama3")
+    success, output = run_command("ollama pull gemini-3-flash-preview")
     if success:
-        print("✅ Modelo llama3 descargado correctamente.")
+        print("✅ Modelo gemini-3-flash-preview descargado correctamente.")
+        return True
     else:
-        print(f"❌ Error al descargar el modelo: {output}")
+        print(f"⚠️ No se pudo descargar gemini-3-flash-preview: {output}")
+        print("Intentando con modelo alternativo llama3...")
+        success_alt, output_alt = run_command("ollama pull llama3")
+        if success_alt:
+            print("✅ Modelo llama3 descargado correctamente como alternativa.")
+            print("⚠️ IMPORTANTE: Actualiza bot.py para usar 'llama3' en lugar de 'gemini-3-flash-preview'")
+            return True
+        else:
+            print(f"❌ Error al descargar modelo alternativo: {output_alt}")
+            return False
 
 def main():
     print("=" * 60)
@@ -87,8 +97,8 @@ def main():
     print("✅ CONFIGURACIÓN COMPLETADA")
     print("=" * 60)
     print("\n📝 Próximos pasos:")
-    print("1. Configura el archivo .env con tu TOKEN y USER_ID")
-    print("2. Asegúrate de que Ollama esté ejecutándose")
+    print("1. Ejecuta 'python config.py' para configurar TOKEN y IDs autorizados")
+    print("2. Asegúrate de que Ollama esté ejecutándose (ollama serve)")
     print("3. Ejecuta el bot con: python bot.py")
     print("\n" + "=" * 60)
 

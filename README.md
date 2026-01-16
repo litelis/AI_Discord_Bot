@@ -1,13 +1,13 @@
 ﻿# 🤖 Bot de Discord con Ollama
 
-Bot de Discord inteligente que utiliza Ollama (modelo llama3) para conversaciones con contexto. Solo responde a usuarios autorizados y mantiene el historial de chat para conversaciones más naturales.
+Bot de Discord inteligente que utiliza Ollama (modelo gemini-3-flash-preview) para conversaciones con contexto. Solo responde a usuarios autorizados y mantiene el historial de chat para conversaciones más naturales.
 
 ## ✨ Características
 
 - 🔐 **Acceso Restringido**: Solo responde a IDs de Discord autorizados
 - 💬 **Conversaciones con Contexto**: Mantiene el historial de chat para cada usuario
 - 🔄 **Reseteo de Chat**: Comando `/newchat` para limpiar el historial
-- 🤖 **IA Local**: Usa Ollama con el modelo llama3 (ejecutándose en localhost)
+- 🤖 **IA Local**: Usa Ollama con el modelo gemini-3-flash-preview (ejecutándose en localhost)
 - 📝 **Respuestas Largas**: Maneja automáticamente respuestas que exceden el límite de Discord
 
 ## 📋 Requisitos Previos
@@ -44,7 +44,7 @@ Este script automáticamente:
 - ✅ Crea el entorno virtual `.venv`
 - ✅ Instala todas las dependencias (`discord.py`, `python-dotenv`, `requests`)
 - ✅ Verifica si Ollama está instalado
-- ✅ Descarga el modelo `llama3` de Ollama
+- ✅ Descarga el modelo `gemini-3-flash-preview` de Ollama (con fallback a llama3)
 
 ### 3. Ejecutar el Bot
 
@@ -108,6 +108,10 @@ Verifica que tu ID de Discord esté en la lista `AUTHORIZED_IDS` del archivo `.e
 1. Verifica que el bot tenga los permisos necesarios en el servidor
 2. Asegúrate de que tu ID esté en `AUTHORIZED_IDS`
 3. Revisa que Ollama esté ejecutándose en `localhost:11434`
+
+### Modelo no disponible
+
+Si gemini-3-flash-preview no está disponible, el setup.py automáticamente intentará descargar llama3 como alternativa. En ese caso, actualiza la variable `MODEL_NAME` en bot.py a `"llama3"`.
 
 ## 📚 Dependencias
 

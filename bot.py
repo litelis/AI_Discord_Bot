@@ -10,6 +10,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 AUTHORIZED_IDS = os.getenv('AUTHORIZED_IDS', '').split(',')
 OLLAMA_URL = "http://localhost:11434/api/generate"
+MODEL_NAME = "gemini-3-flash-preview"  # Modelo de Ollama
 
 # Configurar intents
 intents = discord.Intents.default()
@@ -37,7 +38,7 @@ def get_ollama_response(user_id, message):
     
     try:
         payload = {
-            "model": "llama3",
+            "model": MODEL_NAME,
             "prompt": context,
             "stream": False
         }
@@ -64,6 +65,7 @@ def get_ollama_response(user_id, message):
 async def on_ready():
     print(f'✅ Bot conectado como {bot.user}')
     print(f'📋 IDs autorizados: {AUTHORIZED_IDS}')
+    print(f'🤖 Modelo Ollama: {MODEL_NAME}')
 
 @bot.command(name='newchat')
 async def new_chat(ctx):
