@@ -49,3 +49,9 @@ models/*.safetensors
 # Sistema operativo
 .DS_Store
 Thumbs.db
+
+# Contexto de IA (información sensible del proyecto)
+AI_CONTEXT.txt
+
+AI_QUICK_START.txt
+
