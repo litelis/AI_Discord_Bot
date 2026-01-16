@@ -12,6 +12,7 @@ __pycache__/
 *$py.class
 *.so
 .Python
+src/__pycache__/
 
 # Distribución / empaquetado
 build/
@@ -29,6 +30,12 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Modelos de IA (si se almacenan localmente)
+models/*.bin
+models/*.gguf
+models/*.safetensors
+!models/README.md
 
 # PyCharm
 .idea/

@@ -9,57 +9,60 @@ Bot de Discord inteligente que utiliza Ollama (modelo gemini-3-flash-preview) pa
 - 🔄 **Reseteo de Chat**: Comando `/newchat` para limpiar el historial
 - 🤖 **IA Local**: Usa Ollama con el modelo gemini-3-flash-preview (ejecutándose en localhost)
 - 📝 **Respuestas Largas**: Maneja automáticamente respuestas que exceden el límite de Discord
+- 🚀 **Inicio Automático**: Script principal que inicia Ollama y el bot simultáneamente
 
 ## 📋 Requisitos Previos
 
 1. **Python 3.8+** instalado
-2. **Ollama** instalado y ejecutándose ([Descargar aquí](https://ollama.ai))
-3. **Bot de Discord** creado en el [Portal de Desarrolladores de Discord](https://discord.com/developers/applications)
+2. **Ollama** instalado ([Descargar aquí](https://ollama.ai))
+3. **Git** instalado (para actualizaciones)
+4. **Bot de Discord** creado en el [Portal de Desarrolladores de Discord](https://discord.com/developers/applications)
 
 ## 🚀 Instalación Rápida
 
-### 1. Configurar Bot y Usuarios Autorizados
+### Método 1: Inicio Automático (Recomendado)
 
-Primero, ejecuta el script de configuración interactivo:
-
-```bash
-python config.py
-```
-
-Este script te pedirá:
-- 🔑 **Token del Bot de Discord** (desde el [Portal de Desarrolladores](https://discord.com/developers/applications))
-- 👥 **IDs de usuarios autorizados** (tu ID de Discord y otros que quieras autorizar)
-
-El script creará automáticamente el archivo `.env` con tu configuración.
-
-### 2. Instalación del Entorno
-
-Después de configurar, ejecuta:
+Simplemente ejecuta:
 
 ```bash
-python setup.py
+python main.py
 ```
 
 Este script automáticamente:
-- ✅ Crea el entorno virtual `.venv`
-- ✅ Instala todas las dependencias (`discord.py`, `python-dotenv`, `requests`)
-- ✅ Verifica si Ollama está instalado
-- ✅ Descarga el modelo `gemini-3-flash-preview` de Ollama (con fallback a llama3)
+- ✅ Verifica e inicia Ollama
+- ✅ Descarga el modelo de IA si es necesario
+- ✅ Te guía en la configuración si no existe
+- ✅ Instala dependencias si hace falta
+- ✅ Inicia el bot de Discord
 
-### 3. Ejecutar el Bot
+### Método 2: Configuración Manual
 
-Asegúrate de que Ollama esté ejecutándose, luego:
+Si prefieres configurar paso a paso:
+
+**1. Configurar Bot y Usuarios:**
 
 ```bash
-python bot.py
+python src/config.py
+```
+
+**2. Instalar Dependencias:**
+
+```bash
+python src/setup.py
+```
+
+**3. Ejecutar el Bot:**
+
+```bash
+python src/bot.py
 ```
 
 ## 🔄 Mantener el Bot Actualizado
 
-Para verificar si hay actualizaciones disponibles del repositorio:
+Para verificar y aplicar actualizaciones:
 
 ```bash
-python update.py
+python src/update.py
 ```
 
 Este script:
@@ -68,8 +71,6 @@ Este script:
 - ✅ Te pregunta si deseas actualizar (s/n)
 - ✅ Guarda tus cambios locales antes de actualizar
 - ✅ Aplica las actualizaciones automáticamente
-
-**Recomendación**: Ejecuta `python update.py` periódicamente para mantener tu bot con las últimas mejoras y correcciones.
 
 ## 🎮 Uso
 
@@ -97,22 +98,25 @@ Limpia el historial de conversación para empezar de cero:
 
 ```
 bot/
-├── bot.py              # Código principal del bot
-├── config.py           # Configurador interactivo (.env)
-├── setup.py            # Script de configuración automática
-├── update.py           # Script de actualización del repositorio
+├── main.py             # 🚀 Script principal (inicio automático)
+├── src/                # 📁 Código fuente
+│   ├── bot.py          # Código principal del bot
+│   ├── config.py       # Configurador interactivo (.env)
+│   ├── setup.py        # Instalador de dependencias
+│   └── update.py       # Actualizador del repositorio
+├── models/             # 📁 Carpeta para modelos de IA
+│   └── README.md       # Documentación de modelos
 ├── .env                # Variables de entorno (no versionado)
 ├── .gitignore          # Archivos ignorados por Git
 ├── LICENSE             # Licencia MIT
-├── README.md           # Este archivo
-└── .venv/              # Entorno virtual (creado por setup.py)
+└── README.md           # Este archivo
 ```
 
 ## 🛠️ Solución de Problemas
 
 ### Error: "No se puede conectar a Ollama"
 
-Asegúrate de que Ollama esté ejecutándose:
+El script `main.py` inicia Ollama automáticamente. Si aún así falla:
 ```bash
 ollama serve
 ```
@@ -129,7 +133,7 @@ Verifica que tu ID de Discord esté en la lista `AUTHORIZED_IDS` del archivo `.e
 
 ### Modelo no disponible
 
-Si gemini-3-flash-preview no está disponible, el setup.py automáticamente intentará descargar llama3 como alternativa. En ese caso, actualiza la variable `MODEL_NAME` en bot.py a `"llama3"`.
+Ejecuta `python main.py` y el script te preguntará si deseas descargar el modelo automáticamente.
 
 ## 📚 Dependencias
 
@@ -148,9 +152,10 @@ Este proyecto es de código abierto y está disponible bajo la licencia MIT.
 ## ⚠️ Notas Importantes
 
 - El archivo `.env` **NUNCA** debe ser versionado en Git (ya está en `.gitignore`)
-- Ollama debe estar ejecutándose localmente para que el bot funcione
+- Los modelos de Ollama se gestionan automáticamente por Ollama
 - El bot solo responde a usuarios autorizados para mayor seguridad
 - Las conversaciones se mantienen en memoria y se pierden al reiniciar el bot
+- Usa `python main.py` para el inicio más fácil y automatizado
 
 ---
 
