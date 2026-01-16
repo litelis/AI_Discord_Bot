@@ -54,6 +54,23 @@ Asegúrate de que Ollama esté ejecutándose, luego:
 python bot.py
 ```
 
+## 🔄 Mantener el Bot Actualizado
+
+Para verificar si hay actualizaciones disponibles del repositorio:
+
+```bash
+python update.py
+```
+
+Este script:
+- ✅ Verifica automáticamente si hay actualizaciones disponibles
+- ✅ Muestra los cambios que se aplicarán
+- ✅ Te pregunta si deseas actualizar (s/n)
+- ✅ Guarda tus cambios locales antes de actualizar
+- ✅ Aplica las actualizaciones automáticamente
+
+**Recomendación**: Ejecuta `python update.py` periódicamente para mantener tu bot con las últimas mejoras y correcciones.
+
 ## 🎮 Uso
 
 ### Conversación Normal
@@ -83,6 +100,7 @@ bot/
 ├── bot.py              # Código principal del bot
 ├── config.py           # Configurador interactivo (.env)
 ├── setup.py            # Script de configuración automática
+├── update.py           # Script de actualización del repositorio
 ├── .env                # Variables de entorno (no versionado)
 ├── .gitignore          # Archivos ignorados por Git
 ├── LICENSE             # Licencia MIT
