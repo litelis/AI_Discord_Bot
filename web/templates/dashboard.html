@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 Dashboard - Discord Bot</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {margin: 0; padding: 0; box-sizing: border-box;}
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; padding: 20px;
+        }
+        .container {max-width: 1400px; margin: 0 auto;}
+        .header {
+            background: rgba(255, 255, 255, 0.95); border-radius: 15px;
+            padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .header h1 {color: #667eea; font-size: 2.5em; margin-bottom: 10px;}
+        .header p {color: #666; font-size: 1.1em;}
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px; margin-bottom: 30px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.95); border-radius: 15px;
+            padding: 25px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);}
+        .card h2 {color: #667eea; font-size: 1.3em; margin-bottom: 15px;}
+        .stat-value {font-size: 2.5em; font-weight: bold; color: #764ba2; margin: 15px 0;}
+        .stat-label {color: #999; font-size: 0.9em; text-transform: uppercase;}
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95); border-radius: 15px;
+            padding: 25px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); margin-bottom: 30px;
+        }
+        .refresh-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; border: none; padding: 12px 30px; border-radius: 25px;
+            font-size: 1em; cursor: pointer; transition: all 0.3s ease;
+        }
+        .refresh-btn:hover {transform: translateY(-2px);}
+        .status-online {
+            width: 12px; height: 12px; background: #00d26a;
+            border-radius: 50%; display: inline-block; margin-right: 8px;
+        }
+        .user-list {list-style: none;}
+        .user-item {
+            padding: 15px; background: #f8f9fa; border-radius: 10px;
+            margin-bottom: 10px; display: flex; justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Discord Bot Dashboard</h1>
+            <p><span class="status-online"></span>Bot en línea y funcionando</p>
+            <button class="refresh-btn" onclick="refreshData()">🔄 Actualizar</button>
+        </div>
+        <div class="grid">
+            <div class="card"><h2>💬 Total Mensajes</h2><div class="stat-value" id="totalMessages">0</div></div>
+            <div class="card"><h2>👥 Usuarios Activos</h2><div class="stat-value" id="activeUsers">0</div></div>
+            <div class="card"><h2>🔤 Total Tokens</h2><div class="stat-value" id="totalTokens">0</div></div>
+            <div class="card"><h2>⚡ Tiempo Promedio</h2><div class="stat-value" id="avgTime">0s</div></div>
+        </div>
+        <div class="chart-container"><h2>📊 Actividad por Hora</h2><canvas id="activityChart"></canvas></div>
+        <div class="chart-container"><h2>👥 Top Usuarios</h2><ul class="user-list" id="userList"></ul></div>
+    </div>
+    <script>
+        let activityChart;
+        async function fetchStats() {
+            const response = await fetch('/api/stats');
+            return await response.json();
+        }
+        function updateStats(stats) {
+            document.getElementById('totalMessages').textContent = stats.total_messages.toLocaleString();
+            document.getElementById('activeUsers').textContent = stats.active_users;
+            document.getElementById('totalTokens').textContent = stats.total_tokens.toLocaleString();
+            document.getElementById('avgTime').textContent = stats.avg_response_time.toFixed(2) + 's';
+            const list = document.getElementById('userList');
+            list.innerHTML = stats.top_users.map(user => 
+                <li class="user-item">
+                    <span>Usuario </span>
+                    <span>💬  | 🔤 </span>
+                </li>
+            ).join('');
+            if (activityChart) activityChart.destroy();
+            const ctx = document.getElementById('activityChart').getContext('2d');
+            activityChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 24}, (_, i) => ${i}:00),
+                    datasets: [{
+                        label: 'Mensajes por Hora',
+                        data: stats.hourly_activity || Array(24).fill(0),
+                        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        fill: true, tension: 0.4
+                    }]
+                },
+                options: {responsive: true, plugins: {legend: {display: false}}}
+            });
+        }
+        async function refreshData() {
+            const stats = await fetchStats();
+            updateStats(stats);
+        }
+        refreshData();
+        setInterval(refreshData, 30000);
+    </script>
+</body>
+</html>
