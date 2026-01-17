@@ -36,7 +36,7 @@ def install_dependencies():
     print("📥 Instalando dependencias...")
     pip_path = get_pip_path()
     
-    dependencies = ["discord.py", "python-dotenv", "requests"]
+    dependencies = ["discord.py", "python-dotenv", "requests", "flask", "flask-cors"]
     
     for dep in dependencies:
         print(f"  Instalando {dep}...")
@@ -104,3 +104,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

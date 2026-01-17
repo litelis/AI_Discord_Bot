@@ -62,3 +62,10 @@ AI_README.md
 data/*
 !data/.gitkeep
 
+
+# Logs del bot
+logs/
+
+# Exports
+exports/
+
