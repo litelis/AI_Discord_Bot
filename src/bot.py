@@ -15,7 +15,7 @@ AUTHORIZED_IDS = os.getenv('AUTHORIZED_IDS', '').split(',')
 CHANNEL_ID = os.getenv('CHANNEL_ID', None)
 USE_GPU = os.getenv('USE_GPU', 'false').lower() == 'true'
 OLLAMA_URL = "http://localhost:11434/api/generate"
-MODEL_NAME = "gemini-3-flash-preview"
+MODEL_NAME = "llama3.2"
 
 # Configurar intents
 intents = discord.Intents.default()

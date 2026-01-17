@@ -60,19 +60,19 @@ def check_ollama():
 
 def pull_model():
     """Descarga el modelo de Ollama."""
-    print("📥 Descargando modelo llama3.2...")
+    print("📥 Descargando modelo llama3.2.2...")
     print("Esto puede tomar varios minutos dependiendo de tu conexión...")
-    success, output = run_command("ollama pull llama3.2")
+    success, output = run_command("ollama pull llama3.2.2")
     if success:
-        print("✅ Modelo llama3.2 descargado correctamente.")
+        print("✅ Modelo llama3.2.2 descargado correctamente.")
         return True
     else:
-        print(f"⚠️ No se pudo descargar llama3.2: {output}")
-        print("Intentando con modelo alternativo llama3...")
-        success_alt, output_alt = run_command("ollama pull llama3")
+        print(f"⚠️ No se pudo descargar llama3.2.2: {output}")
+        print("Intentando con modelo alternativo llama3.2...")
+        success_alt, output_alt = run_command("ollama pull llama3.2")
         if success_alt:
-            print("✅ Modelo llama3 descargado correctamente como alternativa.")
-            print("⚠️ IMPORTANTE: Actualiza bot.py para usar 'llama3' en lugar de 'llama3.2'")
+            print("✅ Modelo llama3.2 descargado correctamente como alternativa.")
+            print("⚠️ IMPORTANTE: Actualiza bot.py para usar 'llama3.2' en lugar de 'llama3.2.2'")
             return True
         else:
             print(f"❌ Error al descargar modelo alternativo: {output_alt}")
@@ -104,4 +104,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

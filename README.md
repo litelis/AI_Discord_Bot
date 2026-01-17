@@ -1,6 +1,6 @@
 ﻿# 🤖 Bot de Discord con Ollama
 
-Bot de Discord inteligente que utiliza Ollama (modelo gemini-3-flash-preview) para conversaciones con contexto. Solo responde a usuarios autorizados y mantiene el historial de chat para conversaciones más naturales.
+Bot de Discord inteligente que utiliza Ollama (modelo llama3.2) para conversaciones con contexto. Solo responde a usuarios autorizados y mantiene el historial de chat para conversaciones más naturales.
 
 ## ✨ Características
 
@@ -10,7 +10,7 @@ Bot de Discord inteligente que utiliza Ollama (modelo gemini-3-flash-preview) pa
 - 📺 **Canal Específico**: Configura canales donde el bot responderá
 - 💻 **Aceleración GPU**: Soporte para GPU NVIDIA para respuestas más rápidas
 - 🎮 **Comandos Slash**: Todos los comandos usan el sistema de Discord Slash Commands
-- 🤖 **IA Local**: Usa Ollama con el modelo gemini-3-flash-preview (ejecutándose en localhost)
+- 🤖 **IA Local**: Usa Ollama con el modelo llama3.2 (ejecutándose en localhost)
 - 📝 **Respuestas Largas**: Maneja automáticamente respuestas que exceden el límite de Discord
 - 🚀 **Inicio Automático**: Script main.py que inicia Ollama y el bot simultáneamente
 
@@ -239,3 +239,4 @@ Este proyecto es de código abierto y está disponible bajo la licencia MIT.
 ---
 
 Desarrollado con ❤️ usando Python, Discord.py y Ollama
+
