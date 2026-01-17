@@ -60,19 +60,19 @@ def check_ollama():
 
 def pull_model():
     """Descarga el modelo de Ollama."""
-    print("📥 Descargando modelo gemini-3-flash-preview...")
+    print("📥 Descargando modelo llama3.2...")
     print("Esto puede tomar varios minutos dependiendo de tu conexión...")
-    success, output = run_command("ollama pull gemini-3-flash-preview")
+    success, output = run_command("ollama pull llama3.2")
     if success:
-        print("✅ Modelo gemini-3-flash-preview descargado correctamente.")
+        print("✅ Modelo llama3.2 descargado correctamente.")
         return True
     else:
-        print(f"⚠️ No se pudo descargar gemini-3-flash-preview: {output}")
+        print(f"⚠️ No se pudo descargar llama3.2: {output}")
         print("Intentando con modelo alternativo llama3...")
         success_alt, output_alt = run_command("ollama pull llama3")
         if success_alt:
             print("✅ Modelo llama3 descargado correctamente como alternativa.")
-            print("⚠️ IMPORTANTE: Actualiza bot.py para usar 'llama3' en lugar de 'gemini-3-flash-preview'")
+            print("⚠️ IMPORTANTE: Actualiza bot.py para usar 'llama3' en lugar de 'llama3.2'")
             return True
         else:
             print(f"❌ Error al descargar modelo alternativo: {output_alt}")

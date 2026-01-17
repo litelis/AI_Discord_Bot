@@ -57,3 +57,8 @@ AI_QUICK_START.txt
 
 AI_README.md
 
+
+# Datos del bot (chats guardados, configuración)
+data/*
+!data/.gitkeep
+

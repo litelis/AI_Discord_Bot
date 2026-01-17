@@ -64,7 +64,7 @@ def start_ollama():
     print("❌ No se pudo iniciar Ollama")
     return False
 
-def check_model_exists(model_name="gemini-3-flash-preview"):
+def check_model_exists(model_name="llama3.2"):
     """Verifica si el modelo está descargado."""
     try:
         result = subprocess.run(["ollama", "list"], 
@@ -75,7 +75,7 @@ def check_model_exists(model_name="gemini-3-flash-preview"):
     except:
         return False
 
-def download_model(model_name="gemini-3-flash-preview"):
+def download_model(model_name="llama3.2"):
     """Descarga el modelo de Ollama."""
     print(f"\n📥 Descargando modelo {model_name}...")
     print("Esto puede tomar varios minutos dependiendo de tu conexión...")
@@ -171,7 +171,7 @@ def main():
     
     # 3. Verificar modelo
     print("\n3️⃣ Verificando modelo de IA...")
-    model_name = "gemini-3-flash-preview"
+    model_name = "llama3.2"
     if not check_model_exists(model_name):
         print(f"⚠️ Modelo {model_name} no encontrado")
         response = input("¿Deseas descargarlo ahora? (s/n): ").strip().lower()
