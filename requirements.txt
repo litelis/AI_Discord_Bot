@@ -1,0 +1,5 @@
+﻿discord.py>=2.6.4
+python-dotenv>=1.2.1
+requests>=2.32.5
+flask>=3.1.2
+flask-cors>=6.0.2
