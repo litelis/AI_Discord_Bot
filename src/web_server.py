@@ -1,8 +1,6 @@
 ﻿from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
-import threading
-import json
-from pathlib import Path
+import os
 
 class WebServer:
     """Servidor web para el panel de administración del bot."""
@@ -28,67 +26,32 @@ class WebServer:
         @self.app.route('/')
         def index():
             """Página principal del dashboard."""
-            return render_template('dashboard.html')
+            try:
+                return render_template('dashboard.html')
+            except Exception:
+                return "Dashboard activo. (Error: No se encuentra web/templates/dashboard.html)"
 
         @self.app.route('/api/stats/summary')
         def get_stats_summary():
-            """API: Resumen de estadísticas."""
             return jsonify(self.stats_manager.get_stats_summary())
-
-        @self.app.route('/api/stats/detailed')
-        def get_detailed_stats():
-            """API: Estadísticas detalladas."""
-            return jsonify(self.stats_manager.get_detailed_stats())
-
-<<<<<<< HEAD
-        @self.app.route('/api/stats/charts')
-        def get_chart_data():
-            """API: Datos para gráficos."""
-            stats = self.stats_manager.get_detailed_stats()
-
-            # Preparar datos para Chart.js
-            chart_data = {
-                "response_times": {
-                    "labels": [f"Msg {i+1}" for i in range(len(stats["response_times"][-50:]))],
-                    "data": stats["response_times"][-50:]  # Últimos 50
-                },
-                "tokens_per_second": {
-                    "labels": [f"Msg {i+1}" for i in range(len(stats["tokens_per_second"][-50:]))],
-                    "data": stats["tokens_per_second"][-50:]
-                },
-                "messages_by_user": {
-                    "labels": [f"Usuario {i+1}" for i in range(len(stats["messages_by_user"]))],
-                    "data": [u["count"] for u in stats["messages_by_user"].values()]
-                },
-                "commands_usage": {
-                    "labels": list(stats["commands_used"].keys()),
-                    "data": list(stats["commands_used"].values())
-                }
-            }
-
-            return jsonify(chart_data)
 
         @self.app.route('/api/chats')
         def get_chats():
-            """API: Lista de chats guardados."""
+            """Lista de chats guardados con metadatos básicos."""
             chats_data = {}
             for user_id, chats in self.saved_chats.items():
                 chats_data[user_id] = {}
                 for chat_name, history in chats.items():
+                    last_msg = history[-1]["content"][:50] + "..." if history else ""
                     chats_data[user_id][chat_name] = {
                         "message_count": len(history),
-                        "last_message": history[-1]["content"][:100] + "..." if len(history) > 0 else ""
+                        "last_message": last_msg
                     }
             return jsonify(chats_data)
 
-        @self.app.route('/api/personalities')
-        def get_personalities():
-            """API: Lista de personalidades disponibles."""
-            return jsonify(self.personality_manager.list_personalities())
-
         @self.app.route('/api/chat/<user_id>/<chat_name>')
-        def get_chat(user_id, chat_name):
-            """API: Obtener un chat específico."""
+        def get_specific_chat(user_id, chat_name):
+            """Obtiene los mensajes reales de un chat específico."""
             if user_id in self.saved_chats and chat_name in self.saved_chats[user_id]:
                 return jsonify({
                     "chat_name": chat_name,
@@ -96,19 +59,20 @@ class WebServer:
                 })
             return jsonify({"error": "Chat no encontrado"}), 404
 
+        @self.app.route('/api/config', methods=['GET', 'POST'])
+        def manage_config():
+            if request.method == 'POST':
+                data = request.json
+                # Aquí puedes añadir lógica para guardar en el .env si lo necesitas
+                return jsonify({"status": "success", "message": "Configuración actualizada"})
+            
+            # Datos de ejemplo basados en tu bot
+            return jsonify({
+                "model_name": "llama3.2",
+                "use_gpu": os.getenv('USE_GPU', 'false').lower() == 'true',
+                "authorized_ids": os.getenv('AUTHORIZED_IDS', '').split(',')
+            })
+
     def run(self, host='0.0.0.0', port=5000):
         """Inicia el servidor web."""
-        print(f"🌐 Servidor web iniciado en http://localhost:{port}")
         self.app.run(host=host, port=port, debug=False, use_reloader=False)
-=======
-def run_server(host='0.0.0.0', port=5000):
-    """Inicia el servidor Flask."""
-    app.run(host=host, port=port, debug=False, use_reloader=False)
-
-def start_web_server(stats_mgr, host='0.0.0.0', port=5000):
-    """Inicia el servidor web en un thread separado."""
-    set_stats_manager(stats_mgr)
-    thread = threading.Thread(target=run_server, args=(host, port), daemon=True)
-    thread.start()
-    return thread
->>>>>>> a3a6423eddddd559e2fc6f80f70026559a4e234a
