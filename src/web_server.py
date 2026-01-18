@@ -40,6 +40,7 @@ class WebServer:
             """API: Estadísticas detalladas."""
             return jsonify(self.stats_manager.get_detailed_stats())
 
+<<<<<<< HEAD
         @self.app.route('/api/stats/charts')
         def get_chart_data():
             """API: Datos para gráficos."""
@@ -99,3 +100,15 @@ class WebServer:
         """Inicia el servidor web."""
         print(f"🌐 Servidor web iniciado en http://localhost:{port}")
         self.app.run(host=host, port=port, debug=False, use_reloader=False)
+=======
+def run_server(host='0.0.0.0', port=5000):
+    """Inicia el servidor Flask."""
+    app.run(host=host, port=port, debug=False, use_reloader=False)
+
+def start_web_server(stats_mgr, host='0.0.0.0', port=5000):
+    """Inicia el servidor web en un thread separado."""
+    set_stats_manager(stats_mgr)
+    thread = threading.Thread(target=run_server, args=(host, port), daemon=True)
+    thread.start()
+    return thread
+>>>>>>> a3a6423eddddd559e2fc6f80f70026559a4e234a

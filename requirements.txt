@@ -1,6 +1,14 @@
+<<<<<<< HEAD
 discord.py>=2.0.0
 python-dotenv>=0.19.0
 requests>=2.25.0
 flask>=2.0.0
 flask-cors>=3.0.0
 PyNaCl
+=======
+﻿discord.py>=2.6.4
+python-dotenv>=1.2.1
+requests>=2.32.5
+flask>=3.1.2
+flask-cors>=6.0.2
+>>>>>>> a3a6423eddddd559e2fc6f80f70026559a4e234a
