@@ -1,81 +1,101 @@
-﻿from flask import Flask, render_template, jsonify
+﻿from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 import threading
 import json
 from pathlib import Path
 
-# Importar gestor de estadísticas
-from stats import StatsManager
+class WebServer:
+    """Servidor web para el panel de administración del bot."""
 
-app = Flask(__name__, 
-            template_folder='../web/templates',
-            static_folder='../web/static')
-CORS(app)
+    def __init__(self, stats_manager, personality_manager, saved_chats, chat_histories):
+        self.stats_manager = stats_manager
+        self.personality_manager = personality_manager
+        self.saved_chats = saved_chats
+        self.chat_histories = chat_histories
 
-# Instancia global de stats
-stats_manager = None
+        # Crear aplicación Flask
+        self.app = Flask(__name__,
+                        template_folder='../web/templates',
+                        static_folder='../web/static')
+        CORS(self.app)
 
-def set_stats_manager(manager):
-    """Establece el gestor de estadísticas."""
-    global stats_manager
-    stats_manager = manager
+        # Configurar rutas
+        self.setup_routes()
 
-@app.route('/')
-def index():
-    """Página principal."""
-    return render_template('dashboard.html')
+    def setup_routes(self):
+        """Configura las rutas de la aplicación."""
 
-@app.route('/api/stats/summary')
-def get_stats_summary():
-    """API: Resumen de estadísticas."""
-    if stats_manager:
-        return jsonify(stats_manager.get_stats_summary())
-    return jsonify({"error": "Stats no disponibles"}), 500
+        @self.app.route('/')
+        def index():
+            """Página principal del dashboard."""
+            return render_template('dashboard.html')
 
-@app.route('/api/stats/detailed')
-def get_detailed_stats():
-    """API: Estadísticas detalladas."""
-    if stats_manager:
-        return jsonify(stats_manager.get_detailed_stats())
-    return jsonify({"error": "Stats no disponibles"}), 500
+        @self.app.route('/api/stats/summary')
+        def get_stats_summary():
+            """API: Resumen de estadísticas."""
+            return jsonify(self.stats_manager.get_stats_summary())
 
-@app.route('/api/stats/charts')
-def get_chart_data():
-    """API: Datos para gráficos."""
-    if not stats_manager:
-        return jsonify({"error": "Stats no disponibles"}), 500
-    
-    stats = stats_manager.get_detailed_stats()
-    
-    # Preparar datos para Chart.js
-    chart_data = {
-        "response_times": {
-            "labels": [f"Msg {i+1}" for i in range(len(stats["response_times"][-50:]))],
-            "data": stats["response_times"][-50:]  # Últimos 50
-        },
-        "tokens_per_second": {
-            "labels": [f"Msg {i+1}" for i in range(len(stats["tokens_per_second"][-50:]))],
-            "data": stats["tokens_per_second"][-50:]
-        },
-        "messages_by_user": {
-            "labels": [f"Usuario {i+1}" for i in range(len(stats["messages_by_user"]))],
-            "data": [u["count"] for u in stats["messages_by_user"].values()]
-        },
-        "commands_usage": {
-            "labels": list(stats["commands_used"].keys()),
-            "data": list(stats["commands_used"].values())
-        }
-    }
-    
-    return jsonify(chart_data)
+        @self.app.route('/api/stats/detailed')
+        def get_detailed_stats():
+            """API: Estadísticas detalladas."""
+            return jsonify(self.stats_manager.get_detailed_stats())
 
-def run_server(port=5000):
-    """Inicia el servidor Flask."""
-    app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False)
+        @self.app.route('/api/stats/charts')
+        def get_chart_data():
+            """API: Datos para gráficos."""
+            stats = self.stats_manager.get_detailed_stats()
 
-def start_web_server(stats_mgr, port=5000):
-    """Inicia el servidor web en un thread separado."""
-    set_stats_manager(stats_mgr)
-    thread = threading.Thread(target=run_server, args=(port,), daemon=True)
-    thread.start()
-    return thread
+            # Preparar datos para Chart.js
+            chart_data = {
+                "response_times": {
+                    "labels": [f"Msg {i+1}" for i in range(len(stats["response_times"][-50:]))],
+                    "data": stats["response_times"][-50:]  # Últimos 50
+                },
+                "tokens_per_second": {
+                    "labels": [f"Msg {i+1}" for i in range(len(stats["tokens_per_second"][-50:]))],
+                    "data": stats["tokens_per_second"][-50:]
+                },
+                "messages_by_user": {
+                    "labels": [f"Usuario {i+1}" for i in range(len(stats["messages_by_user"]))],
+                    "data": [u["count"] for u in stats["messages_by_user"].values()]
+                },
+                "commands_usage": {
+                    "labels": list(stats["commands_used"].keys()),
+                    "data": list(stats["commands_used"].values())
+                }
+            }
+
+            return jsonify(chart_data)
+
+        @self.app.route('/api/chats')
+        def get_chats():
+            """API: Lista de chats guardados."""
+            chats_data = {}
+            for user_id, chats in self.saved_chats.items():
+                chats_data[user_id] = {}
+                for chat_name, history in chats.items():
+                    chats_data[user_id][chat_name] = {
+                        "message_count": len(history),
+                        "last_message": history[-1]["content"][:100] + "..." if len(history) > 0 else ""
+                    }
+            return jsonify(chats_data)
+
+        @self.app.route('/api/personalities')
+        def get_personalities():
+            """API: Lista de personalidades disponibles."""
+            return jsonify(self.personality_manager.list_personalities())
+
+        @self.app.route('/api/chat/<user_id>/<chat_name>')
+        def get_chat(user_id, chat_name):
+            """API: Obtener un chat específico."""
+            if user_id in self.saved_chats and chat_name in self.saved_chats[user_id]:
+                return jsonify({
+                    "chat_name": chat_name,
+                    "messages": self.saved_chats[user_id][chat_name]
+                })
+            return jsonify({"error": "Chat no encontrado"}), 404
+
+    def run(self, host='0.0.0.0', port=5000):
+        """Inicia el servidor web."""
+        print(f"🌐 Servidor web iniciado en http://localhost:{port}")
+        self.app.run(host=host, port=port, debug=False, use_reloader=False)

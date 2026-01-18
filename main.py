@@ -136,9 +136,12 @@ def start_bot():
     print("Presiona Ctrl+C para detener el bot")
     print("-" * 60)
     print()
-    
+
     try:
-        subprocess.run([sys.executable, "src/bot.py"])
+        # Ejecutar con PYTHONPATH configurado para incluir el directorio actual
+        env = os.environ.copy()
+        env['PYTHONPATH'] = os.getcwd()
+        subprocess.run([sys.executable, "src/bot.py"], env=env)
     except KeyboardInterrupt:
         print("\n\n⏹️ Bot detenido por el usuario")
     except Exception as e:
