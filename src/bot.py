@@ -16,7 +16,7 @@ from logger import BotLogger
 from personality import PersonalityManager
 from chat_export import ChatExporter
 from stats import StatsManager
-from web_server import start_server_thread
+from web_server import start_web_server
 
 # Cargar variables de entorno
 load_dotenv()
@@ -136,10 +136,10 @@ async def query_ollama(prompt, user_id):
 def start_web_server():
     """Inicia el servidor web si no está corriendo."""
     global web_server_running, web_server_thread
-    
+
     if not web_server_running:
         try:
-            web_server_thread = start_server_thread(host='127.0.0.1', port=5000)
+            web_server_thread = start_web_server(stats_mgr, host='127.0.0.1', port=5000)
             web_server_running = True
             logger.log_info("Web server started on http://127.0.0.1:5000")
             return True

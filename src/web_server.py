@@ -69,13 +69,13 @@ def get_chart_data():
     
     return jsonify(chart_data)
 
-def run_server(port=5000):
+def run_server(host='0.0.0.0', port=5000):
     """Inicia el servidor Flask."""
-    app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False)
+    app.run(host=host, port=port, debug=False, use_reloader=False)
 
-def start_web_server(stats_mgr, port=5000):
+def start_web_server(stats_mgr, host='0.0.0.0', port=5000):
     """Inicia el servidor web en un thread separado."""
     set_stats_manager(stats_mgr)
-    thread = threading.Thread(target=run_server, args=(port,), daemon=True)
+    thread = threading.Thread(target=run_server, args=(host, port), daemon=True)
     thread.start()
     return thread
